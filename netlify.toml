@@ -1,0 +1,7 @@
+[build]
+command = "./gradlew :composeApp:jsBrowserProductionExecutable"
+publish = "composeApp/build/js/packages/composeApp"
+
+[build.environment]
+# Netlify'ga Java 17 ishlatishni aytadi
+JAVA_VERSION = "17"
