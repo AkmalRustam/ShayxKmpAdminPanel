@@ -1,10 +1,7 @@
 [build]
-# Build Commandni to'g'ridan-to'g'ri Java 11 bilan ishlatish
-command = "JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 ./gradlew :composeApp:jsBrowserProductionExecutable"
+command = "./gradlew :composeApp:jsBrowserProductionExecutable"
 publish = "composeApp/build/js/packages/composeApp"
 
 [build.environment]
-# Eski JAVA_VERSION o'rniga, standart Java 11 Build Pathni beramiz
-JAVA_HOME = "/usr/lib/jvm/java-11-openjdk-amd64"
-# Shuningdek, xatolikni oldini olish uchun JAVA_VERSION ni ham qo'shamiz
+# Faqat JAVA_VERSION ni ishlatamiz.
 JAVA_VERSION = "11"
