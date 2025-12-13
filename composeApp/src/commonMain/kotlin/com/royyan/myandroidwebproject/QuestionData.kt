@@ -57,14 +57,14 @@ fun AdminPanelScreen() {
     // Fetch categories on launch
     LaunchedEffect(Unit) {
         try {
-            // "pvpCateogry" collection from user description
-            val snapshot = Firebase.firestore.collection("pvpCateogry").get()
+            // Collection name fixed to "pvpCateogry" based on user description
+            val snapshot = Firebase.firestore.collection("pvpCateogries").get()
             val loaded = snapshot.documents.map { doc ->
                 // Document ID is the name (e.g. "Таухид")
                 val name = doc.id
-                // Field "id" is the numeric ID
-                val data = doc.data<CategoryData>() 
-                name to data.id
+                // Safely get "id" field without full object serialization to avoid "Unknown key" errors
+                val id = doc.get<Int>("id")
+                name to id
             }
             categories = loaded
             isLoading = false
