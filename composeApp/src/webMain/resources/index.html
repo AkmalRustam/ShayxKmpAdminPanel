@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyAndroidWebProject</title>
     <link type="text/css" rel="stylesheet" href="styles.css">
-    <script type="application/javascript" src="composeApp.js"></script>
 
-    <!-- Firebase SDK larni yuklash -->
+    <!-- 1. Firebase SDK (Compat versiyasi - Global 'firebase' obyekti uchun) -->
+    <!-- Bu yerda sizning versiyangiz (9.22.0) qoldirildi, u Kotlin/JS bilan yaxshi ishlaydi -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- 2. Firebase Konfiguratsiya -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBNJFDbCMsNn1NDHqmdZlCh5B4wFJtZJko",
@@ -22,6 +24,9 @@
         };
         firebase.initializeApp(firebaseConfig);
     </script>
+    
+    <!-- 3. Asosiy Dastur (Eng oxirida) -->
+    <script type="application/javascript" src="composeApp.js"></script>
 </head>
 <body>
 </body>
