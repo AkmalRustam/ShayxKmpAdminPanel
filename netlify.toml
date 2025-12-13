@@ -2,6 +2,5 @@
 command = "./gradlew :composeApp:jsBrowserProductionExecutable"
 publish = "composeApp/build/js/packages/composeApp"
 
-[build.environment]
-# Faqat JAVA_VERSION ni ishlatamiz.
-JAVA_VERSION = "11"
+# [build.environment]
+# JAVA_VERSION = "11" # O'chirildi
