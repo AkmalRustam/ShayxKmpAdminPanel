@@ -1,0 +1,6 @@
+[build]
+command = "./gradlew jsBrowserDistribution"
+publish = "composeApp/build/dist/js/productionExecutable"
+
+[build.environment]
+JAVA_VERSION = "17"
