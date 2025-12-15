@@ -1,23 +1,15 @@
 [build]
 command = """
-    # Java 17 ni o'rnatamiz
-    yum install -y java-17-amazon-corretto-devel || true
-
-    # Java 17 manzilini topamiz
-    export JAVA_HOME=$(alternatives --list | grep java | awk '{print $3}' | head -n 1 | sed 's/\/bin\/java//')
-
-    # Agar topilmasa, standart manzilni sinaymiz (Netlify image turiga qarab)
-    if [ -z "$JAVA_HOME" ]; then
-        export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
+    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    if [ ! -d "$JAVA_HOME" ]; then
+        echo "Java 17 not found at standard path, looking elsewhere..."
+        export JAVA_HOME=$(find /usr/lib/jvm -name "java-17*" -type d | head -n 1)
     fi
 
-    echo "Using JAVA_HOME: $JAVA_HOME"
     export PATH=$JAVA_HOME/bin:$PATH
-
-    # Versiyani tekshiramiz (ishonch hosil qilish uchun)
+    echo "Java Home is: $JAVA_HOME"
     java -version
 
-    # Ruxsat berib, ishga tushiramiz
     chmod +x gradlew
     ./gradlew jsBrowserDistribution
   """
@@ -25,3 +17,5 @@ publish = "composeApp/build/dist/js/productionExecutable"
 
 [build.environment]
 JAVA_VERSION = "17"
+# Android SDK kerak emasligi uchun uni o'chirib turamiz
+ANDROID_HOME = ""
