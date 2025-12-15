@@ -1,3 +1,27 @@
 [build]
-command = "./gradlew jsBrowserDistribution"
+command = """
+    # Java 17 ni o'rnatamiz
+    yum install -y java-17-amazon-corretto-devel || true
+
+    # Java 17 manzilini topamiz
+    export JAVA_HOME=$(alternatives --list | grep java | awk '{print $3}' | head -n 1 | sed 's/\/bin\/java//')
+
+    # Agar topilmasa, standart manzilni sinaymiz (Netlify image turiga qarab)
+    if [ -z "$JAVA_HOME" ]; then
+        export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
+    fi
+
+    echo "Using JAVA_HOME: $JAVA_HOME"
+    export PATH=$JAVA_HOME/bin:$PATH
+
+    # Versiyani tekshiramiz (ishonch hosil qilish uchun)
+    java -version
+
+    # Ruxsat berib, ishga tushiramiz
+    chmod +x gradlew
+    ./gradlew jsBrowserDistribution
+  """
 publish = "composeApp/build/dist/js/productionExecutable"
+
+[build.environment]
+JAVA_VERSION = "17"
