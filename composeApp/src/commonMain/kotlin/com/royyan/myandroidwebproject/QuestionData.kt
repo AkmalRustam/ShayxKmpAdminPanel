@@ -233,7 +233,7 @@ fun AdminPanelScreen() {
                             val newId = maxId + 1
 
                             // "pvpQuestions" collection
-                            firestore?.collection("pvpQuestions")?.document(nextQuestionNumber.toString())?.set(newQuestion)
+                            firestore?.collection("pvpQuestions")?.document(newId.toString())?.set(newQuestion)
 
                             successMessage = "Вопрос успешно добавлен!"
                             // Clear form
