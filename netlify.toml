@@ -1,21 +1,26 @@
 [build]
-command = """
-    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-    if [ ! -d "$JAVA_HOME" ]; then
-        echo "Java 17 not found at standard path, looking elsewhere..."
-        export JAVA_HOME=$(find /usr/lib/jvm -name "java-17*" -type d | head -n 1)
-    fi
+command = """# 1. Java 17 ni yuklab olamiz (Amazon Corretto)
+    curl -sL https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz -o jdk17.tar.gz
 
+    # 2. Arxivdan chiqaramiz
+    tar -xzf jdk17.tar.gz
+
+    # 3. Papka nomini aniqlab olamiz
+    JDK_DIR=$(ls -d amazon-corretto-17*)
+
+    # 4. JAVA_HOME ni shu yangi papkaga to'g'irlaymiz
+    export JAVA_HOME=$PWD/$JDK_DIR
     export PATH=$JAVA_HOME/bin:$PATH
-    echo "Java Home is: $JAVA_HOME"
+
+    # 5. Tekshiramiz (endi Java 17 chiqishi shart)
     java -version
 
+    # 6. Gradle ga ruxsat berib, ishga tushiramiz
     chmod +x gradlew
     ./gradlew jsBrowserDistribution
   """
 publish = "composeApp/build/dist/js/productionExecutable"
 
 [build.environment]
-JAVA_VERSION = "17"
-# Android SDK kerak emasligi uchun uni o'chirib turamiz
+# Android SDK kerak emas
 ANDROID_HOME = ""
