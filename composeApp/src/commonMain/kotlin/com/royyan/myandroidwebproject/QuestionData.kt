@@ -80,6 +80,10 @@ fun AdminPanelScreen() {
 
     var expandedCategory by remember { mutableStateOf(false) }
 
+    // New states for requests
+    var categoryQuestionCount by remember { mutableStateOf(0) }
+    var isSaving by remember { mutableStateOf(false) }
+
     // Initialize Firebase and Fetch categories on launch
     LaunchedEffect(Unit) {
         try {
@@ -113,6 +117,24 @@ fun AdminPanelScreen() {
             errorMessage = "Ошибка при загрузке категорий: ${e.message}"
             isLoading = false
             e.printStackTrace()
+        }
+    }
+
+    // Fetch question count when category changes
+    LaunchedEffect(selectedCategory, firestore) {
+        val cat = selectedCategory
+        val fs = firestore
+        if (cat != null && fs != null) {
+            try {
+                // Trying to use where query to count
+                // Corrected syntax for gitlive firebase sdk: where { "field" equalTo value }
+                val qs = fs.collection("pvpQuestions").where { "categoryId" equalTo cat.second }.get()
+                categoryQuestionCount = qs.documents.size
+            } catch (e: Exception) {
+                println("Error counting questions: ${e.message}")
+            }
+        } else {
+            categoryQuestionCount = 0
         }
     }
 
@@ -157,6 +179,11 @@ fun AdminPanelScreen() {
                 }
             }
 
+            // Show count
+            if (selectedCategory != null) {
+                Text("Количество вопросов: $categoryQuestionCount")
+            }
+
             // Question Text
             OutlinedTextField(
                 value = questionText,
@@ -196,6 +223,8 @@ fun AdminPanelScreen() {
 
             Button(
                 onClick = {
+                    if (isSaving) return@Button
+                    
                     if (selectedCategory == null) {
                         errorMessage = "Пожалуйста, выберите категорию"
                         return@Button
@@ -206,6 +235,7 @@ fun AdminPanelScreen() {
                     }
                     
                     scope.launch {
+                        isSaving = true
                         try {
                             errorMessage = null
                             val finalAnswers = listOf(answer1, answer2, answer3, answer4)
@@ -236,6 +266,9 @@ fun AdminPanelScreen() {
                             firestore?.collection("pvpQuestions")?.document(newId.toString())?.set(newQuestion)
 
                             successMessage = "Вопрос успешно добавлен!"
+                            // Update count
+                            categoryQuestionCount++
+
                             // Clear form
                             questionText = ""
                             answer1 = ""
@@ -247,12 +280,19 @@ fun AdminPanelScreen() {
                         } catch (e: Exception) {
                             errorMessage = "Ошибка: ${e.message}"
                             successMessage = null
+                        } finally {
+                            isSaving = false
                         }
                     }
                 },
+                enabled = !isSaving,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Сохранить")
+                if (isSaving) {
+                    Text("Сохранение...")
+                } else {
+                    Text("Сохранить")
+                }
             }
         }
     }
